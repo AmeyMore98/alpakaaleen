@@ -1,0 +1,30 @@
+{
+    "name": "alpakaaleen",
+    "version": "1.0.0",
+    "description": "A NodeJS URL shortener",
+    "main": "index.js",
+    "scripts": {
+        "create-migration": "knex --knexfile ./db/knexfile.js migrate:make",
+        "migrate": "knex --knexfile ./db/knexfile.js migrate:latest",
+        "migrate-down": "knex --knexfile ./db/knexfile.js migrate:down",
+        "rollback": "knex --knexfile ./db/knexfile.js migrate:rollback",
+        "rollback-all": "knex --knexfile ./db/knexfile.js migrate:rollback --all",
+        "test": "node spec.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "convict": "^6.2.3",
+        "express": "^4.18.1",
+        "jasmine": "^4.3.0",
+        "jasmine-console-reporter": "^3.1.0",
+        "knex": "^2.3.0",
+        "knex-migrate": "^1.7.4",
+        "lodash": "^4.17.21",
+        "morgan": "^1.10.0",
+        "nodemon": "^2.0.19",
+        "objection": "^3.0.1",
+        "pg": "^8.8.0",
+        "supertest": "^6.2.4"
+    }
+}

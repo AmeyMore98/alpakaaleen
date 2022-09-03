@@ -1,0 +1,6 @@
+Generate a new shorter URL for user's URL. Shortened URL should redirect to user's URL.
+sURL will be off the form: domainName/slug
+The slug will be six characters long, unique, alphanumeric string.
+Users can also provide a slug, that can be 10char long.
+sURL should be valid for a specific time. Default 5min. User can also specify this.
+
