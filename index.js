@@ -1,1 +1,10 @@
-require("./app");
+const app = require("./app");
+const config = require("./config");
+
+app.listen(config.port, () => {
+    console.log(`Listening on http://localhost:${config.port}`);
+});
+
+process.on("SIGTERM", function () {
+    process.exit(0);
+});

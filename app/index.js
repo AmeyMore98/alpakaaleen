@@ -42,8 +42,4 @@ app.use(function onError(err, req, res, next) {
     res.status(status).json(error);
 });
 
-app.listen(config.port, () => {
-    console.log(`Listening on http://localhost:${config.port}`);
-});
-
 module.exports = app;

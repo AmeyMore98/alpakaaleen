@@ -11,7 +11,7 @@ describe("POST /urls", () => {
 
     it("should create a short URL", async () => {
         const body = {
-            url: "www.google.com",
+            url: "https://www.google.com",
         };
 
         const res = await request.post(endpoint).send(body);
@@ -33,7 +33,7 @@ describe("POST /urls", () => {
 
     it("should return 422 for invalid URL", async () => {
         const body = {
-            url: "abcd",
+            url: "http://abcd",
         };
 
         const res = await request.post(endpoint).send(body);
@@ -72,5 +72,16 @@ describe("POST /urls", () => {
         const res = await request.post(endpoint).send(body);
 
         expect(res.status).toBe(422);
+    });
+
+    it("should add protocol to URL if missing", async () => {
+        const body = {
+            url: "www.google.com",
+        };
+
+        const res = await request.post(endpoint).send(body);
+
+        expect(res.status).toBe(200);
+        expect(res.body.url).toBe("http://www.google.com");
     });
 });

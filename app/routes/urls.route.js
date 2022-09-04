@@ -8,7 +8,15 @@ const RESERVED_SLUGS = ["urls", "URLS"];
 
 urlsRouter.post(
     "",
-    body("url").isURL().withMessage("Must be a valid URL"),
+    body("url")
+        .isURL()
+        .withMessage("Must be a valid URL")
+        .customSanitizer((value) => {
+            if (!value.startsWith("http")) {
+                value = "http://" + value;
+            }
+            return value;
+        }),
     body("slug")
         .optional()
         .matches(/^[a-zA-Z0-9]*$/)
