@@ -14,6 +14,11 @@ const config = convict({
         default: 9090,
         env: "PORT",
     },
+    domain: {
+        doc: "domain",
+        format: String,
+        default: "http://alpa.kaaleen",
+    },
     postgres: {
         doc: "postgres connection string",
         format: String,

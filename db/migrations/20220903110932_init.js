@@ -9,7 +9,7 @@ exports.up = function (knex) {
         table.timestamp("updatedAt").defaultTo(knex.fn.now());
         table.string("slug", 10).notNullable();
         table.string("url", 2046).notNullable();
-        table.timestamp("validTill").notNullable();
+        table.timestamp("expiresAt").notNullable();
 
         table.unique("slug");
     });
