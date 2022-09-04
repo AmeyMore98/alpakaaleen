@@ -1,9 +1,9 @@
 const { customAlphabet } = require("nanoid");
-const { addMinutes } = require("date-and-time");
+const { addSeconds } = require("date-and-time");
 const urlJoin = require("urljoin");
 
 const BaseModel = require("./base.model");
-const { getCurrentTimestamp } = require("../utils/datetime.utils");
+const { getCurrentEpochInSecs } = require("../utils/datetime.utils");
 const { DB } = require("../common/postgres.init");
 const config = require("../../config");
 
@@ -29,20 +29,20 @@ class UrlsModel extends BaseModel {
             properties: {
                 slug: { type: "string" },
                 url: { type: "string" },
-                expiresAt: { type: "string", format: "date-time" },
-                createdAt: { type: "string", format: "date-time" },
-                updatedAt: { type: "string", format: "date-time" },
+                expiresAt: { type: "number" },
+                createdAt: { type: "number" },
+                updatedAt: { type: "number" },
             },
         };
     }
 
     $beforeInsert() {
-        this.createdAt = getCurrentTimestamp();
-        this.updatedAt = getCurrentTimestamp();
+        this.createdAt = getCurrentEpochInSecs();
+        this.updatedAt = getCurrentEpochInSecs();
     }
 
     $beforeUpdate() {
-        this.updatedAt = getCurrentTimestamp();
+        this.updatedAt = getCurrentEpochInSecs();
     }
 
     static get virtualAttributes() {
@@ -53,9 +53,9 @@ class UrlsModel extends BaseModel {
         return urlJoin(config.domain, this.slug);
     }
 
-    static async addUrl(
-        slug = UrlsModel.getSlug(),
+    static async addShortUrl(
         url,
+        slug = UrlsModel.getSlug(),
         expiresAt = UrlsModel.getExpiresAt()
     ) {
         return this.query()
@@ -67,16 +67,20 @@ class UrlsModel extends BaseModel {
             .returning("*");
     }
 
+    static async getShortUrlBySlug(slug) {
+        return this.query().findOne({ slug });
+    }
+
     static getSlug() {
         return slug(6);
     }
 
-    static getExpiresAt(expiryDelayInMins = this.DEFAULT_EXPIRY_MINUTES) {
-        return addMinutes(new Date(), expiryDelayInMins).toISOString();
+    static getExpiresAt(expiryDelay = this.DEFAULT_EXPIRY_SECONDS) {
+        return getCurrentEpochInSecs() + expiryDelay;
     }
 }
 
-// Mintue level granularity while working with URL expiry timestamps
-UrlsModel.DEFAULT_EXPIRY_MINUTES = 60 * 24; // 1day
+// Seconds level granularity while working with URL expiry timestamps
+UrlsModel.DEFAULT_EXPIRY_SECONDS = 24 * 60 * 60; // 1day
 
 module.exports = UrlsModel;

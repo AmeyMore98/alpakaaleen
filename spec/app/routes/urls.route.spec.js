@@ -1,7 +1,7 @@
-const date = require("date-and-time");
 const urlJoin = require("urljoin");
 
 const UrlsModel = require("../../../app/models/urls.model");
+const { getCurrentEpochInSecs } = require("../../../app/utils/datetime.utils");
 const config = require("../../../config");
 
 const request = require("../../utils/request");
@@ -19,20 +19,16 @@ describe("POST /urls", () => {
         expect(res.status).toBe(200);
         expect(res.body).toEqual({
             _id: jasmine.any(Number),
-            createdAt: jasmine.any(String),
-            updatedAt: jasmine.any(String),
+            createdAt: jasmine.any(Number),
+            updatedAt: jasmine.any(Number),
             slug: jasmine.any(String),
             url: body.url,
             shortUrl: urlJoin(config.domain, res.body.slug),
-            expiresAt: jasmine.any(String),
+            expiresAt: jasmine.any(Number),
         });
-        expect(
-            Math.round(
-                date
-                    .subtract(new Date(res.body.expiresAt), new Date())
-                    .toMinutes()
-            )
-        ).toBe(UrlsModel.DEFAULT_EXPIRY_MINUTES);
+        expect(Math.round(res.body.expiresAt - getCurrentEpochInSecs())).toBe(
+            UrlsModel.DEFAULT_EXPIRY_SECONDS
+        );
     });
 
     it("should return 422 for invalid URL", async () => {

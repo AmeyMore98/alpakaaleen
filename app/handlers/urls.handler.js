@@ -4,7 +4,7 @@ const UrlsModel = require("../models/urls.model");
 exports.createShortURL = asyncHandler(async (req, res) => {
     const { slug, url, expiresAt } = req.body;
 
-    const item = await UrlsModel.addUrl(slug, url, expiresAt);
+    const item = await UrlsModel.addShortUrl(url, slug, expiresAt);
 
     return res.json(item);
 });

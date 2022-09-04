@@ -2,9 +2,11 @@ const { body } = require("express-validator");
 const { createShortURL } = require("../handlers/urls.handler");
 const { validate } = require("../middlewares/validation.middleware");
 
-const router = require("express").Router();
+const urlsRouter = require("express").Router();
 
-router.post(
+const RESERVED_SLUGS = ["urls", "URLS"];
+
+urlsRouter.post(
     "",
     body("url").isURL().withMessage("Must be a valid URL"),
     body("slug")
@@ -15,7 +17,11 @@ router.post(
         .isLength({
             max: 10,
         })
-        .withMessage("Must be less than 10 characters long"),
+        .bail()
+        .withMessage("Must be less than 10 characters long")
+        .not()
+        .isIn([RESERVED_SLUGS])
+        .withMessage(`${RESERVED_SLUGS.join(",")} are reserved keywords`),
     body("expiresAt")
         .optional()
         .isDate({ format: "YYYY-MM-DDTHH:mm:ss.sssZ" })
@@ -23,4 +29,4 @@ router.post(
     validate,
     createShortURL
 );
-module.exports = router;
+module.exports = urlsRouter;

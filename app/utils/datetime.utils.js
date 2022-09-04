@@ -1,3 +1,3 @@
-exports.getCurrentTimestamp = () => {
-    return new Date().toISOString();
+exports.getCurrentEpochInSecs = () => {
+    return Math.round(new Date().getTime() / 1000);
 };
